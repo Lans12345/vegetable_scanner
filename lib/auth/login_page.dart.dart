@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vegetable_scanner/auth/signup_page.dart.dart';
+import 'package:vegetable_scanner/screens/home_screen.dart';
 import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
@@ -93,7 +94,12 @@ class LoginScreen extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: SizedBox(
                   width: 150,
-                  child: ButtonWidget(onPressed: (() {}), text: 'Login'),
+                  child: ButtonWidget(
+                      onPressed: (() {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => HomeScreen()));
+                      }),
+                      text: 'Login'),
                 ),
               ),
             ),
