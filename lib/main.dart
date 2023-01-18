@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vegetable_scanner/auth/login_page.dart.dart';
 import 'package:vegetable_scanner/screens/home_screen.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }

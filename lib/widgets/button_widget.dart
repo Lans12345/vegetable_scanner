@@ -20,7 +20,7 @@ class ButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       minWidth: 250,
-      color: Color(0xff559637),
+      color: Color(0xff53BA2E),
       onPressed: onPressed,
       child: TextBold(text: text, fontSize: 18, color: Colors.white),
     );
