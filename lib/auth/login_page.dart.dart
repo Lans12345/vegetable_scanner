@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vegetable_scanner/auth/signup_page.dart.dart';
 import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
@@ -105,7 +106,10 @@ class LoginScreen extends StatelessWidget {
                 TextRegular(
                     text: 'No Account?', fontSize: 12, color: Colors.grey),
                 TextButton(
-                    onPressed: (() {}),
+                    onPressed: (() {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => RegisterScreen()));
+                    }),
                     child: TextBold(
                         text: 'Create now', fontSize: 14, color: Colors.black))
               ],
