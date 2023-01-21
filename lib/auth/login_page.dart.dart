@@ -5,8 +5,6 @@ import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

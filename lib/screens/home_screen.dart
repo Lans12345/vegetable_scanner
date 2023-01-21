@@ -5,8 +5,6 @@ import 'package:vegetable_scanner/utils/colors.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,8 +43,7 @@ class HomeScreen extends StatelessWidget {
                               onPressed: () {
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen()));
+                                        builder: (context) => LoginScreen()));
                               },
                               child: const Text(
                                 'Continue',
@@ -81,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                   child: GestureDetector(
                     onTap: (() {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ResultScreen()));
+                          builder: (context) => ResultScreen()));
                     }),
                     child: Card(
                       elevation: 5,

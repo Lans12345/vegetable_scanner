@@ -4,8 +4,6 @@ import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

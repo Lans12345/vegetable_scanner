@@ -6,8 +6,6 @@ import 'package:vegetable_scanner/utils/colors.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
 class ResultScreen extends StatelessWidget {
-  const ResultScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +26,7 @@ class ResultScreen extends StatelessWidget {
             onPressed: (() {
               Fluttertoast.showToast(msg: 'Added to recent scans');
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
             }),
             icon: Icon(
               Icons.arrow_back_ios,
