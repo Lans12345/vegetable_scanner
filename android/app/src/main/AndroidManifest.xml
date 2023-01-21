@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.vegetable_scanner">
    <application
-        android:label="vegetable_scanner"
+        android:label="Vegetable Scanner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
