@@ -1,10 +1,86 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tflite/tflite.dart';
 import 'package:vegetable_scanner/auth/login_page.dart.dart';
 import 'package:vegetable_scanner/screens/result_screen.dart';
 import 'package:vegetable_scanner/utils/colors.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late String output = '';
+
+  late File pickedImage;
+
+  bool isImageLoaded = false;
+
+  late List result;
+
+  late String accuracy = '';
+
+  late String name = '';
+
+  late String numbers = '';
+
+  GetStorage box = GetStorage();
+
+  getImageCamera(String imgsrc) async {
+    var tempStore = await ImagePicker().getImage(
+        source: imgsrc == 'camera' ? ImageSource.camera : ImageSource.gallery);
+
+    setState(() {
+      pickedImage = File(tempStore!.path);
+      isImageLoaded = true;
+      applyModel(File(tempStore.path));
+    });
+  }
+
+  loadModel() async {
+    await Tflite.loadModel(
+        model: 'assets/model/model_unquant.tflite',
+        labels: 'assets/model/labels.txt');
+  }
+
+  applyModel(File file) async {
+    var res = await Tflite.runModelOnImage(
+      path: file.path,
+      numResults: 2,
+      threshold: 0.5,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    setState(() {
+      result = res!;
+      print('result:$result');
+      String str = result[0]['label'];
+
+      name = str.substring(2);
+      accuracy = result != null
+          ? '${(result[0]['confidence'] * 100.0).toString().substring(0, 2)}%'
+          : '';
+    });
+
+    box.write('crop', name);
+    await Future.delayed(const Duration(seconds: 5));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => ResultScreen()));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    loadModel();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +137,9 @@ class HomeScreen extends StatelessWidget {
               )),
         ],
         leading: IconButton(
-            onPressed: (() {}),
+            onPressed: (() {
+              getImageCamera('camera');
+            }),
             icon: const Icon(
               Icons.qr_code_scanner_rounded,
               color: Colors.white,
@@ -77,6 +155,7 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
                   child: GestureDetector(
                     onTap: (() {
+                      box.write('crop', 'name of crop');
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ResultScreen()));
                     }),
@@ -91,7 +170,7 @@ class HomeScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             Image.asset('assets/images/sample1.png'),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Column(

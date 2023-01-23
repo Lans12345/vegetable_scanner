@@ -9,26 +9,18 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffCBCE32),
+      backgroundColor: const Color(0xffCBCE32),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: primary,
         title: TextBold(text: 'Result', fontSize: 18, color: Colors.white),
-        actions: [
-          IconButton(
-              onPressed: (() {}),
-              icon: Icon(
-                Icons.qr_code_scanner_rounded,
-                color: Colors.white,
-              )),
-        ],
         leading: IconButton(
             onPressed: (() {
               Fluttertoast.showToast(msg: 'Added to recent scans');
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => HomeScreen()));
             }),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
             )),
@@ -38,14 +30,21 @@ class ResultScreen extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 250,
-            child: Image.asset('assets/images/sample1.png'),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xffCBCE32),
             ),
+            child: Image.asset('assets/images/sample1.png'),
           ),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
+                height: 500,
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
+                    color: Colors.white),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -106,13 +105,6 @@ class ResultScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                height: 500,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)),
-                    color: Colors.white),
               ),
             ),
           ),
