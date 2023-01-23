@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:localstore/localstore.dart';
 import 'package:vegetable_scanner/auth/login_page.dart.dart';
 import 'package:vegetable_scanner/screens/home_screen.dart';
+import 'package:vegetable_scanner/services/data/crop_list.dart';
 import 'package:vegetable_scanner/utils/colors.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
+  @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  GetStorage box = GetStorage();
+
+  final db = Localstore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +28,15 @@ class ResultScreen extends StatelessWidget {
         title: TextBold(text: 'Result', fontSize: 18, color: Colors.white),
         leading: IconButton(
             onPressed: (() {
+              final id = db.collection(box.read('crop')).doc().id;
+
+              db
+                  .collection(box.read('crop'))
+                  .doc(id)
+                  .set({'name': box.read('crop'), 'id': id});
               Fluttertoast.showToast(msg: 'Added to recent scans');
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => HomeScreen()));
             }),

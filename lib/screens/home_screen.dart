@@ -1,11 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:localstore/localstore.dart';
 import 'package:tflite/tflite.dart';
 import 'package:vegetable_scanner/auth/login_page.dart.dart';
 import 'package:vegetable_scanner/screens/result_screen.dart';
+import 'package:vegetable_scanner/services/data/crop_data.dart';
+import 'package:vegetable_scanner/services/data/crop_list.dart';
 import 'package:vegetable_scanner/utils/colors.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
@@ -15,6 +19,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getData();
+    loadModel();
+  }
+
+  final db = Localstore.instance;
+
+  var hasLoaded = false;
+
+  List<String> crops = [];
+
+  getData() async {
+    final items = await db.collection(box.read('crop')).get();
+
+    items?.forEach((key, value) {
+      if (cropList.contains(value['name'])) {
+        print('yes');
+        crops.add(value['name']);
+      }
+    });
+
+    setState(() {
+      hasLoaded = true;
+    });
+  }
+
   late String output = '';
 
   late File pickedImage;
@@ -68,140 +100,148 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     box.write('crop', name);
-    await Future.delayed(const Duration(seconds: 5));
+    Fluttertoast.showToast(msg: 'Plant scanned ${name}');
+    await Future.delayed(const Duration(seconds: 3));
 
-    print(name);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ResultScreen()));
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    loadModel();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: primary,
-        title:
-            TextBold(text: 'Recent Scans', fontSize: 18, color: Colors.white),
-        actions: [
-          IconButton(
-              onPressed: (() {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text(
-                            'Logout Confirmation',
-                            style: TextStyle(
-                                fontFamily: 'QBold',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          content: const Text(
-                            'Are you sure you want to Logout?',
-                            style: TextStyle(fontFamily: 'QRegular'),
-                          ),
-                          actions: <Widget>[
-                            MaterialButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: const Text(
-                                'Close',
-                                style: TextStyle(
-                                    fontFamily: 'QRegular',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginScreen()));
-                              },
-                              child: const Text(
-                                'Continue',
-                                style: TextStyle(
-                                    fontFamily: 'QRegular',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ));
-              }),
-              icon: const Icon(
-                Icons.logout,
-                color: Colors.white,
-              )),
-        ],
-        leading: IconButton(
-            onPressed: (() {
-              getImageCamera('camera');
-            }),
-            icon: const Icon(
-              Icons.qr_code_scanner_rounded,
-              color: Colors.white,
-            )),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 20),
-        child: StreamBuilder<Object>(
-            stream: null,
-            builder: (context, snapshot) {
-              return ListView.builder(itemBuilder: ((context, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
-                  child: GestureDetector(
-                    onTap: (() {
-                      box.write('crop', 'name of crop');
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ResultScreen()));
-                    }),
-                    child: Card(
-                      elevation: 5,
-                      child: Container(
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
-                        child: Row(
-                          children: [
-                            Image.asset('assets/images/sample1.png'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextBold(
-                                    text: 'Chayote',
-                                    fontSize: 14,
-                                    color: Colors.black),
-                                SizedBox(
-                                  width: 150,
-                                  child: TextRegular(
-                                      text:
-                                          '(Sechium edule), also known as mirliton and choko, is an edible plant belonging to the gourd family, Cucurbitaceae. ',
-                                      fontSize: 12,
-                                      color: Colors.black),
+    return hasLoaded
+        ? Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              backgroundColor: primary,
+              title: TextBold(
+                  text: 'Recent Scans', fontSize: 18, color: Colors.white),
+              actions: [
+                IconButton(
+                    onPressed: (() {
+                      for (int i = 0; i < crops.length; i++)
+                        if (cropData.contains(crops[i])) {
+                          print(cropData[i]);
+                        }
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: const Text(
+                                  'Logout Confirmation',
+                                  style: TextStyle(
+                                      fontFamily: 'QBold',
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ],
+                                content: const Text(
+                                  'Are you sure you want to Logout?',
+                                  style: TextStyle(fontFamily: 'QRegular'),
+                                ),
+                                actions: <Widget>[
+                                  MaterialButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text(
+                                      'Close',
+                                      style: TextStyle(
+                                          fontFamily: 'QRegular',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginScreen()));
+                                    },
+                                    child: const Text(
+                                      'Continue',
+                                      style: TextStyle(
+                                          fontFamily: 'QRegular',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              ));
+                    }),
+                    icon: const Icon(
+                      Icons.logout,
+                      color: Colors.white,
+                    )),
+              ],
+              leading: IconButton(
+                  onPressed: (() {
+                    getImageCamera('camera');
+                  }),
+                  icon: const Icon(
+                    Icons.qr_code_scanner_rounded,
+                    color: Colors.white,
+                  )),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 20),
+              child: StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    return ListView.builder(
+                        itemCount: crops.length,
+                        itemBuilder: ((context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
+                            child: GestureDetector(
+                              onTap: (() {
+                                box.write('crop', crops[index]);
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ResultScreen()));
+                              }),
+                              child: Card(
+                                elevation: 5,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white),
+                                  child: Row(
+                                    children: [
+                                      Image.asset('assets/images/sample1.png'),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextBold(
+                                              text: cropList[index],
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                          SizedBox(
+                                            width: 150,
+                                            child: TextRegular(
+                                                text:
+                                                    '(Sechium edule), also known as mirliton and choko, is an edible plant belonging to the gourd family, Cucurbitaceae. ',
+                                                fontSize: 12,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }));
-            }),
-      ),
-    );
+                          );
+                        }));
+                  }),
+            ),
+          )
+        : Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
   }
 }
