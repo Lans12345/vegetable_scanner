@@ -45,6 +45,7 @@ dependencies:
   riverpod:
   flutter_riverpod:
   fluttertoast:
+  tflite:
 
 
 dev_dependencies:
