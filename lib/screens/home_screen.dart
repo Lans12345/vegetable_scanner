@@ -69,6 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     box.write('crop', name);
     await Future.delayed(const Duration(seconds: 5));
+
+    print(name);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ResultScreen()));
   }
