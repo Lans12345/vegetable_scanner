@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:vegetable_scanner/auth/login_page.dart.dart';
 import 'package:vegetable_scanner/utils/colors.dart';
 import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
 class RegisterScreen extends StatelessWidget {
+  final box = GetStorage();
+  late String email = '';
+
+  late String password = '';
+  late String confirmPassword = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +19,7 @@ class RegisterScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Stack(
@@ -35,9 +43,12 @@ class RegisterScreen extends StatelessWidget {
               ],
             ),
             TextBold(
-                text: 'Vegetables', fontSize: 42, color: Color(0xff4E7B02)),
-            TextBold(text: 'Scanner', fontSize: 42, color: Color(0xff4E7B02)),
-            SizedBox(
+                text: 'Vegetables',
+                fontSize: 42,
+                color: const Color(0xff4E7B02)),
+            TextBold(
+                text: 'Scanner', fontSize: 42, color: const Color(0xff4E7B02)),
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -48,7 +59,7 @@ class RegisterScreen extends StatelessWidget {
                     TextBold(text: 'Signup', fontSize: 18, color: Colors.black),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -60,8 +71,10 @@ class RegisterScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: TextFormField(
-                    onChanged: ((value) {}),
-                    decoration: InputDecoration(
+                    onChanged: ((value) {
+                      email = value;
+                    }),
+                    decoration: const InputDecoration(
                         prefixText: '',
                         border: InputBorder.none,
                         hintText: '    Email',
@@ -73,7 +86,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Padding(
@@ -85,8 +98,11 @@ class RegisterScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: TextFormField(
-                    onChanged: ((value) {}),
-                    decoration: InputDecoration(
+                    obscureText: true,
+                    onChanged: ((value) {
+                      password = value;
+                    }),
+                    decoration: const InputDecoration(
                         prefixText: '',
                         border: InputBorder.none,
                         hintText: '    Password',
@@ -98,7 +114,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Padding(
@@ -110,8 +126,11 @@ class RegisterScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: TextFormField(
-                    onChanged: ((value) {}),
-                    decoration: InputDecoration(
+                    obscureText: true,
+                    onChanged: ((value) {
+                      confirmPassword = value;
+                    }),
+                    decoration: const InputDecoration(
                         prefixText: '',
                         border: InputBorder.none,
                         hintText: '    Confirm Password',
@@ -123,7 +142,7 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -132,11 +151,31 @@ class RegisterScreen extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: SizedBox(
                   width: 150,
-                  child: ButtonWidget(onPressed: (() {}), text: 'Signup'),
+                  child: ButtonWidget(
+                      onPressed: (() {
+                        if (email.contains('@')) {
+                          if (confirmPassword != password) {
+                            Fluttertoast.showToast(
+                                msg: 'Password do not match!');
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: 'Account created succesfully!');
+                            box.write('email', email);
+                            box.write('password', password);
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: 'Please provide a valid email address!');
+                        }
+                      }),
+                      text: 'Signup'),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
           ],

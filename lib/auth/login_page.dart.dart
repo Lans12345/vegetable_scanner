@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:vegetable_scanner/auth/signup_page.dart.dart';
 import 'package:vegetable_scanner/screens/home_screen.dart';
 import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
 class LoginScreen extends StatelessWidget {
+  final box = GetStorage();
+  late String email = '';
+
+  late String password = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +18,7 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Image.asset(
@@ -20,9 +26,12 @@ class LoginScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             TextBold(
-                text: 'Vegetables', fontSize: 42, color: Color(0xff4E7B02)),
-            TextBold(text: 'Scanner', fontSize: 42, color: Color(0xff4E7B02)),
-            SizedBox(
+                text: 'Vegetables',
+                fontSize: 42,
+                color: const Color(0xff4E7B02)),
+            TextBold(
+                text: 'Scanner', fontSize: 42, color: const Color(0xff4E7B02)),
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -33,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                     TextBold(text: 'Login', fontSize: 18, color: Colors.black),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -45,8 +54,10 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: TextFormField(
-                    onChanged: ((value) {}),
-                    decoration: InputDecoration(
+                    onChanged: ((value) {
+                      email = value;
+                    }),
+                    decoration: const InputDecoration(
                         prefixText: '',
                         border: InputBorder.none,
                         hintText: '    Email',
@@ -58,7 +69,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Padding(
@@ -70,8 +81,10 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.white),
                   child: TextFormField(
-                    onChanged: ((value) {}),
-                    decoration: InputDecoration(
+                    onChanged: ((value) {
+                      password = value;
+                    }),
+                    decoration: const InputDecoration(
                         prefixText: '',
                         border: InputBorder.none,
                         hintText: '    Password',
@@ -83,7 +96,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -94,14 +107,21 @@ class LoginScreen extends StatelessWidget {
                   width: 150,
                   child: ButtonWidget(
                       onPressed: (() {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => HomeScreen()));
+                        if (box.read('email') != email ||
+                            box.read('password') != password) {
+                          Fluttertoast.showToast(msg: 'Invalid Account!');
+                        } else {
+                          Fluttertoast.showToast(msg: 'Logged in!');
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()));
+                        }
                       }),
                       text: 'Login'),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Row(
