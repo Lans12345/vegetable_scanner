@@ -55,14 +55,14 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ));
               }),
-              icon: Icon(
+              icon: const Icon(
                 Icons.logout,
                 color: Colors.white,
               )),
         ],
         leading: IconButton(
             onPressed: (() {}),
-            icon: Icon(
+            icon: const Icon(
               Icons.qr_code_scanner_rounded,
               color: Colors.white,
             )),
@@ -83,6 +83,11 @@ class HomeScreen extends StatelessWidget {
                     child: Card(
                       elevation: 5,
                       child: Container(
+                        width: double.infinity,
+                        height: 100,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white),
                         child: Row(
                           children: [
                             Image.asset('assets/images/sample1.png'),
@@ -98,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                                     fontSize: 14,
                                     color: Colors.black),
                                 SizedBox(
-                                  width: 180,
+                                  width: 150,
                                   child: TextRegular(
                                       text:
                                           '(Sechium edule), also known as mirliton and choko, is an edible plant belonging to the gourd family, Cucurbitaceae. ',
@@ -109,11 +114,6 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        width: double.infinity,
-                        height: 100,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
                       ),
                     ),
                   ),
