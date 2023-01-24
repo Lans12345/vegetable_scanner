@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:vegetable_scanner/auth/signup_page.dart.dart';
 import 'package:vegetable_scanner/screens/home_screen.dart';
+import 'package:vegetable_scanner/services/data/crop_data.dart';
 import 'package:vegetable_scanner/widgets/button_widget.dart';
 import 'package:vegetable_scanner/widgets/text_widget.dart';
 
@@ -111,6 +112,7 @@ class LoginScreen extends StatelessWidget {
                             box.read('password') != password) {
                           Fluttertoast.showToast(msg: 'Invalid Account!');
                         } else {
+                          box.write('cropData', cropData);
                           Fluttertoast.showToast(msg: 'Logged in!');
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(

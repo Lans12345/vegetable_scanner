@@ -28,10 +28,10 @@ class _ResultScreenState extends State<ResultScreen> {
         title: TextBold(text: 'Result', fontSize: 18, color: Colors.white),
         leading: IconButton(
             onPressed: (() {
-              final id = db.collection(box.read('crop')).doc().id;
+              final id = db.collection('Crop').doc().id;
 
               db
-                  .collection(box.read('crop'))
+                  .collection('Crop')
                   .doc(id)
                   .set({'name': box.read('crop'), 'id': id});
               Fluttertoast.showToast(msg: 'Added to recent scans');

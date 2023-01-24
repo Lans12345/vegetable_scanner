@@ -32,15 +32,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<String> crops = [];
 
-  getData() async {
-    final items = await db.collection(box.read('crop')).get();
+  late List datas = [];
 
-    items?.forEach((key, value) {
-      if (cropList.contains(value['name'])) {
-        print('yes');
-        crops.add(value['name']);
-      }
-    });
+  getData() async {
+    final items = await db.collection('Crop').get();
+
+    if (items != null) {
+      items.forEach((key, value) {
+        if (cropList.contains(value['name'])) {
+          crops.add(value['name']);
+
+          var data = cropData
+              .where((element) => element["Name"] == value['name'])
+              .toList();
+
+          datas.add(data);
+        }
+      });
+    }
 
     setState(() {
       hasLoaded = true;
@@ -65,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getImageCamera(String imgsrc) async {
     var tempStore = await ImagePicker().getImage(
-        source: imgsrc == 'camera' ? ImageSource.camera : ImageSource.gallery);
+        source: imgsrc == 'gallery' ? ImageSource.camera : ImageSource.gallery);
 
     setState(() {
       pickedImage = File(tempStore!.path);
@@ -99,7 +108,45 @@ class _HomeScreenState extends State<HomeScreen> {
           : '';
     });
 
-    box.write('crop', name);
+    if (name == 'Banana') {
+      box.write('data', box.read('cropData')[0]);
+    } else if (name == 'Bell Pepper') {
+      box.write('data', box.read('cropData')[1]);
+    } else if (name == 'Cabbage') {
+      box.write('data', box.read('cropData')[2]);
+    } else if (name == 'Carrot') {
+      box.write('data', box.read('cropData')[3]);
+    } else if (name == 'Chilli Pepper') {
+      box.write('data', box.read('cropData')[4]);
+    } else if (name == 'Corn') {
+      box.write('data', box.read('cropData')[5]);
+    } else if (name == 'Cucumber') {
+      box.write('data', box.read('cropData')[6]);
+    } else if (name == 'Eggplant') {
+      box.write('data', box.read('cropData')[7]);
+    } else if (name == 'Garlic') {
+      box.write('data', box.read('cropData')[8]);
+    } else if (name == 'Ginger') {
+      box.write('data', box.read('cropData')[9]);
+    } else if (name == 'Lettuce') {
+      box.write('data', box.read('cropData')[10]);
+    } else if (name == 'Onion') {
+      box.write('data', box.read('cropData')[11]);
+    } else if (name == 'Peas') {
+      box.write('data', box.read('cropData')[12]);
+    } else if (name == 'Potato') {
+      box.write('data', box.read('cropData')[13]);
+    } else if (name == 'Raddish') {
+      box.write('data', box.read('cropData')[14]);
+    } else if (name == 'Spinach') {
+      box.write('data', box.read('cropData')[15]);
+    } else if (name == 'Sweet Potato') {
+      box.write('data', box.read('cropData')[16]);
+    } else if (name == 'Tomato') {
+      box.write('data', box.read('cropData')[17]);
+    } else {
+      box.write('data', box.read('cropData')[18]);
+    }
     Fluttertoast.showToast(msg: 'Plant scanned ${name}');
     await Future.delayed(const Duration(seconds: 3));
 
@@ -109,6 +156,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(box.read('cropData')[1]['Weather Season']);
+
     return hasLoaded
         ? Scaffold(
             appBar: AppBar(
@@ -119,10 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
               actions: [
                 IconButton(
                     onPressed: (() {
-                      for (int i = 0; i < crops.length; i++)
-                        if (cropData.contains(crops[i])) {
-                          print(cropData[i]);
-                        }
                       showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
