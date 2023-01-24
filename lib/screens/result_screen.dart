@@ -30,10 +30,12 @@ class _ResultScreenState extends State<ResultScreen> {
             onPressed: (() {
               final id = db.collection('Crop').doc().id;
 
-              db
-                  .collection('Crop')
-                  .doc(id)
-                  .set({'name': box.read('crop'), 'id': id});
+              db.collection('Crop').doc(id).set({
+                'name': box.read('data')['Name'],
+                'image': box.read('data')['image'],
+                'desc': box.read('data')['Description'],
+                'id': id
+              });
               Fluttertoast.showToast(msg: 'Added to recent scans');
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -53,12 +55,12 @@ class _ResultScreenState extends State<ResultScreen> {
             decoration: const BoxDecoration(
               color: Color(0xffCBCE32),
             ),
-            child: Image.asset('assets/images/sample1.png'),
+            child: Image.asset(box.read('data')['image']),
           ),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                height: 500,
+                height: 800,
                 width: double.infinity,
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
@@ -74,13 +76,14 @@ class _ResultScreenState extends State<ResultScreen> {
                         height: 20,
                       ),
                       TextBold(
-                          text: 'Chayote', fontSize: 26, color: Colors.black),
+                          text: box.read('data')['Name'],
+                          fontSize: 26,
+                          color: Colors.black),
                       SizedBox(
                         height: 10,
                       ),
                       TextRegular(
-                          text:
-                              '(Sechium edule), also known as mirliton and choko, is an edible plant belonging to the gourd family, Cucurbitaceae. ',
+                          text: box.read('data')['Description'],
                           fontSize: 14,
                           color: Colors.black),
                       SizedBox(
@@ -91,7 +94,7 @@ class _ResultScreenState extends State<ResultScreen> {
                           fontSize: 16,
                           color: Colors.black),
                       TextRegular(
-                          text: '•  Sunny/Rainy',
+                          text: '•  ${box.read('data')['Weather Season']}',
                           fontSize: 14,
                           color: Colors.black),
                       SizedBox(
@@ -102,12 +105,7 @@ class _ResultScreenState extends State<ResultScreen> {
                           fontSize: 16,
                           color: Colors.black),
                       TextRegular(
-                          text:
-                              '•  Chayote squash with tomato and green chilies',
-                          fontSize: 14,
-                          color: Colors.black),
-                      TextRegular(
-                          text: '•  Spicy pan-roasted chayote squash',
+                          text: '•  ${box.read('data')['Recommendation']}',
                           fontSize: 14,
                           color: Colors.black),
                       SizedBox(
@@ -118,8 +116,43 @@ class _ResultScreenState extends State<ResultScreen> {
                           fontSize: 16,
                           color: Colors.black),
                       TextRegular(
+                          text: '•  ${box.read('data')['How to plant']}',
+                          fontSize: 14,
+                          color: Colors.black),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextRegular(
+                          text: 'Amount of soil needed',
+                          fontSize: 16,
+                          color: Colors.black),
+                      TextRegular(
                           text:
-                              '•  Chayote is a warm-season, tender perennial. Plant the whole fruit 3 to 4 weeks after the last average frost date in spring when the weather has warmed.',
+                              '•  ${box.read('data')['Amount of soil needed']}',
+                          fontSize: 14,
+                          color: Colors.black),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextRegular(
+                          text: 'Amount of soil water',
+                          fontSize: 16,
+                          color: Colors.black),
+                      TextRegular(
+                          text:
+                              '•  ${box.read('data')['Amount of soil water']}',
+                          fontSize: 14,
+                          color: Colors.black),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextRegular(
+                          text: 'Amount of soil fertilizer',
+                          fontSize: 16,
+                          color: Colors.black),
+                      TextRegular(
+                          text:
+                              '•  ${box.read('data')['Amount of soil fertilizer']}',
                           fontSize: 14,
                           color: Colors.black),
                     ],

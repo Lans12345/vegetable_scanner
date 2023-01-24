@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   var hasLoaded = false;
 
-  List<String> crops = [];
+  List<String> names = [];
+  List<String> images = [];
+  List<String> descs = [];
 
   late List datas = [];
 
@@ -40,13 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (items != null) {
       items.forEach((key, value) {
         if (cropList.contains(value['name'])) {
-          crops.add(value['name']);
-
-          var data = cropData
-              .where((element) => element["Name"] == value['name'])
-              .toList();
-
-          datas.add(data);
+          names.add(value['name']);
+          images.add(value['image']);
+          descs.add(value['desc']);
         }
       });
     }
@@ -74,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getImageCamera(String imgsrc) async {
     var tempStore = await ImagePicker().getImage(
-        source: imgsrc == 'gallery' ? ImageSource.camera : ImageSource.gallery);
+        source: imgsrc == 'camera' ? ImageSource.camera : ImageSource.gallery);
 
     setState(() {
       pickedImage = File(tempStore!.path);
@@ -156,8 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(box.read('cropData')[1]['Weather Season']);
-
     return hasLoaded
         ? Scaffold(
             appBar: AppBar(
@@ -229,52 +225,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   stream: null,
                   builder: (context, snapshot) {
                     return ListView.builder(
-                        itemCount: crops.length,
+                        itemCount: names.length,
                         itemBuilder: ((context, index) {
                           return Padding(
                             padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
-                            child: GestureDetector(
-                              onTap: (() {
-                                box.write('crop', crops[index]);
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => ResultScreen()));
-                              }),
-                              child: Card(
-                                elevation: 5,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white),
-                                  child: Row(
-                                    children: [
-                                      Image.asset('assets/images/sample1.png'),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextBold(
-                                              text: cropList[index],
-                                              fontSize: 14,
+                            child: Card(
+                              elevation: 5,
+                              child: Container(
+                                width: double.infinity,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white),
+                                child: Row(
+                                  children: [
+                                    Image.asset(images[index]),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        TextBold(
+                                            text: names[index],
+                                            fontSize: 14,
+                                            color: Colors.black),
+                                        SizedBox(
+                                          width: 150,
+                                          child: TextRegular(
+                                              text: descs[index],
+                                              fontSize: 12,
                                               color: Colors.black),
-                                          SizedBox(
-                                            width: 150,
-                                            child: TextRegular(
-                                                text:
-                                                    '(Sechium edule), also known as mirliton and choko, is an edible plant belonging to the gourd family, Cucurbitaceae. ',
-                                                fontSize: 12,
-                                                color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
